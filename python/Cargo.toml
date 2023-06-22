@@ -1,0 +1,18 @@
+[package]
+name = "rust_js_wasm_py"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "rust_js_wasm"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rust_js_wasm = { path = "../rust", version = "*" }
+pyo3 = { version = "0.16", features = ["abi3-py37", "extension-module", "multiple-pymethods"] }
+
+[profile.release]
+panic = 'abort'
+lto = true

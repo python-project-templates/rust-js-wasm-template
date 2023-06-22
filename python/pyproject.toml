@@ -1,0 +1,66 @@
+[build-system]
+requires = ["maturin>=0.13,<0.14"]
+build-backend = "maturin"
+
+[project]
+name = "rust_js_wasm"
+authors = [{name = "Tim Paine", email = "t.paine154@gmail.com"}]
+description="Generic communication library"
+version = "0.1.0"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+keywords = []
+dependencies = []
+
+[project.optional-dependencies]
+develop = [
+    "black>=23",
+    "bump2version",
+    "check-manifest",
+    "maturin",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "twine",
+    "wheel",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+
+[project.urls]
+Repository = "https://github.com/python-project-templates/rust-js-wasm"
+Homepage = "https://github.com/python-project-templates/rust-js-wasm"
+
+[tool.black]
+color = true
+line-length = 150
+target-version = ['py310']
+skip-string-normalization = true
+
+[tool.check-manifest]
+ignore = []
+
+[tool.ruff]
+line-length = 150
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+
+[tool.pytest.ini_options]
+asyncio_mode = 'strict'
+testpaths = 'rust_js_wasm/tests'

@@ -1,0 +1,20 @@
+[package]
+name = "rust_js_wasm"
+version = "0.1.0"
+authors = ["timkpaine <t.paine154@gmail.com>"]
+edition = "2021"
+license = "Apache-2.0"
+readme = "../README.md"
+repository = "https://github.com/python-project-templates/rust-js-wasm"
+description = "A Python/Rust/JS/Webassembly project template"
+
+[lib]
+name = "rust_js_wasm"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+num = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"

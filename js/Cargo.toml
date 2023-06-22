@@ -1,0 +1,20 @@
+[package]
+name = "rust_js_wasm_js"
+version = "0.1.0"
+edition = "2021"
+publish = false
+keywords = ["experimental"]
+include = ["src/**/*", "Cargo.toml", "package.json"]
+
+[lib]
+name = "rust_js_wasm"
+path = "src/rust/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rust_js_wasm = { path = "../rust", version = "*" }
+wasm-bindgen = "0.2.84"
+
+[profile.release]
+panic = 'abort'
+lto = true

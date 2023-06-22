@@ -1,0 +1,92 @@
+name: Build Status
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+    paths-ignore:
+      - CONTRIBUTING.md
+      - LICENSE
+      - README.md
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
+        python-version: [3.9]
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        components: clippy
+        override: true
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: "pip"
+        cache-dependency-path: python/pyproject.toml
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+        cache-dependency-path: js/yarn.lock
+
+    - name: Install dependencies
+      run: make develop
+
+    - name: Build 
+      run: make build
+
+    - name: Lint
+      run: make lint
+
+    - name: Checks
+      run: make checks
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Test
+      run: make tests-ci
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Upload test results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        check_name: Test Results
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          rust/junit.xml
+          js/junit.xml
+          python/junit.xml
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
